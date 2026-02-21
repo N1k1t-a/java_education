@@ -53,12 +53,22 @@ public class Main {
 
         System.out.println(result);
 
+        System.out.println("Делим на 2");
+
         result.division(2);
 
         System.out.println(result);
 
+        System.out.println("Делим на 3 (в ответе должно прийти целое число. Остаток отбрасываем)");
+
         result.division(3);
-        
+
+        System.out.println(result);
+
+        System.out.println("попытка деления на 0 (ответ не должен измениться)");
+
+        result.division(0);
+
         System.out.println(result);
 
     }

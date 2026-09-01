@@ -1,6 +1,6 @@
-package org.suai.telegin.lab3.matrix;
+package matrix;
 
-import org.suai.telegin.lab3.matrix.exceptions.MatrixException;
+import matrix.exceptions.MatrixException;
 
 public class Matrix {
     private final int[][] data;

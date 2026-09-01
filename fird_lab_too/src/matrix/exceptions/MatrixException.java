@@ -1,4 +1,4 @@
-package org.suai.telegin.lab3.matrix.exceptions;
+package matrix.exceptions;
 
 public final class MatrixException extends RuntimeException {
 

@@ -27,6 +27,8 @@ public class SparseMatrix implements IMatrix {
     }
 
     public int getElement(int row, int column) {
+        if (row < 0 || row >= this.rows || column < 0 || column >= this.columns)
+            throw new MatrixException("Индексы за границей матрицы: " + row + ", " + column);
         for (Cell cell : cells) {
             if (cell.row == row && cell.column == column) {
                 return cell.value;
@@ -36,6 +38,9 @@ public class SparseMatrix implements IMatrix {
     }
 
     public void setElement(int row, int column, int value) {
+        if (row < 0 || row >= this.rows || column < 0 || column >= this.columns)
+            throw new MatrixException("Индексы за границей матрицы: " + row + ", " + column);
+
         ListIterator<Cell> iterator = cells.listIterator();
         while (iterator.hasNext()) {
             Cell cell = iterator.next();
@@ -47,6 +52,7 @@ public class SparseMatrix implements IMatrix {
                 return;
             }
         }
+
         if (value != 0) {
             Cell newCell = new Cell();
             newCell.row = row;

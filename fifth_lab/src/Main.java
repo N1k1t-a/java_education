@@ -1,28 +1,30 @@
 import exceptions.MatrixException;
-import graph.AdjacencyListGraph;
-import graph.AdjacencyMatrixGraph;
-import graph.IGraph;
 import matrix.IMatrix;
 import matrix.SparseMatrix;
 import matrix.SquareMatrix;
 import matrix.UsualMatrix;
+import stack.ArrayListStack;
+import stack.ArrayStack;
+import stack.IStack;
+import stack.LinkedListStack;
 
 import java.util.Random;
 
 public class Main {
 
-    static void dfs(IGraph graph, int start) {
-        boolean[] visited = new boolean[graph.getVertexCount()];
-        dfsHelper(graph, start, visited);
-    }
-
-    static void dfsHelper(IGraph graph, int vertex, boolean[] visited) {
-        visited[vertex] = true;
-        System.out.println("  Посещаем вершину: " + vertex);
-        for (int i = 0; i < graph.getVertexCount(); i++) {
-            if (graph.isConnected(vertex, i) && !visited[i])
-                dfsHelper(graph, i, visited);
+    static int reverse(IStack stack, int value) {
+        int temp = value;
+        while (temp > 0) {
+            stack.push(temp % 10);
+            temp /= 10;
         }
+        int result = 0;
+        int multiplier = 1;
+        while (stack.length() > 0) {
+            result += stack.pop() * multiplier;
+            multiplier *= 10;
+        }
+        return result;
     }
 
     public static void main(String[] args) {
@@ -160,49 +162,40 @@ public class Main {
             System.out.println("getElement(10, 10): " + e.getMessage());
         }
 
-        // === Тест 9: графы — создание и вывод ===
-        System.out.println("\n=== Тест 9: граф на матрице и списке смежности ===");
-        AdjacencyMatrixGraph matrixGraph = new AdjacencyMatrixGraph(5);
-        AdjacencyListGraph listGraph = new AdjacencyListGraph(5);
-        matrixGraph.connect(0, 1); matrixGraph.connect(0, 2);
-        matrixGraph.connect(1, 3); matrixGraph.connect(2, 3);
-        matrixGraph.connect(3, 4);
-        listGraph.connect(0, 1); listGraph.connect(0, 2);
-        listGraph.connect(1, 3); listGraph.connect(2, 3);
-        listGraph.connect(3, 4);
-        System.out.println(matrixGraph);
-        System.out.println(listGraph);
-        System.out.println("Графы равны: " + matrixGraph.equals(listGraph));
+        // === Тест 9: reverse на трёх реализациях ===
+        System.out.println("\n=== Тест 9: reverse(12345) на трёх реализациях ===");
+        System.out.println("LinkedListStack: " + reverse(new LinkedListStack(), 12345));
+        System.out.println("ArrayListStack:  " + reverse(new ArrayListStack(), 12345));
+        System.out.println("ArrayStack:      " + reverse(new ArrayStack(10), 12345));
 
-        // === Тест 10: disconnect ===
-        System.out.println("=== Тест 10: disconnect(0, 2) ===");
-        matrixGraph.disconnect(0, 2);
-        listGraph.disconnect(0, 2);
-        System.out.println("После удаления ребра 0-2 графы равны: " + matrixGraph.equals(listGraph));
+        // === Тест 10: equals между разными реализациями ===
+        System.out.println("\n=== Тест 10: equals между разными реализациями ===");
+        LinkedListStack ll = new LinkedListStack();
+        ArrayListStack al = new ArrayListStack();
+        ArrayStack ar = new ArrayStack(5);
+        ll.push(1);
+        ll.push(2);
+        ll.push(3);
+        al.push(1);
+        al.push(2);
+        al.push(3);
+        ar.push(1);
+        ar.push(2);
+        ar.push(3);
+        System.out.println("LinkedList == ArrayList: " + ll.equals(al));
+        System.out.println("LinkedList == Array:     " + ll.equals(ar));
+        System.out.println("ArrayList  == Array:     " + al.equals(ar));
 
-        // === Тест 11: DFS на матрице смежности ===
-        System.out.println("\n=== Тест 11: DFS на AdjacencyMatrixGraph с вершины 0 ===");
-        AdjacencyMatrixGraph dfsMatrix = new AdjacencyMatrixGraph(5);
-        dfsMatrix.connect(0, 1); dfsMatrix.connect(0, 2);
-        dfsMatrix.connect(1, 3); dfsMatrix.connect(2, 3);
-        dfsMatrix.connect(3, 4);
-        dfs(dfsMatrix, 0);
-
-        // === Тест 12: DFS на списке смежности ===
-        System.out.println("\n=== Тест 12: DFS на AdjacencyListGraph с вершины 0 ===");
-        AdjacencyListGraph dfsList = new AdjacencyListGraph(5);
-        dfsList.connect(0, 1); dfsList.connect(0, 2);
-        dfsList.connect(1, 3); dfsList.connect(2, 3);
-        dfsList.connect(3, 4);
-        dfs(dfsList, 0);
-
-        // === Тест 13: DFS на несвязном графе ===
-        System.out.println("\n=== Тест 13: DFS на несвязном графе (вершины 3,4 недостижимы) ===");
-        AdjacencyMatrixGraph disconnected = new AdjacencyMatrixGraph(5);
-        disconnected.connect(0, 1);
-        disconnected.connect(1, 2);
-        disconnected.connect(3, 4);
-        dfs(disconnected, 0);
+        // === Тест 11: ArrayStack переполнение ===
+        System.out.println("\n=== Тест 11: переполнение ArrayStack ===");
+        try {
+            ArrayStack small = new ArrayStack(2);
+            small.push(1);
+            small.push(2);
+            small.push(3);
+        } catch (RuntimeException e) {
+            System.out.println("Поймано исключение: " + e.getMessage());
+        }
 
         System.out.println("\n=== Все тесты завершены! ===");
     }
